@@ -16,9 +16,8 @@
 
 */
 import React from "react";
-import { useQuery, ApolloProvider } from '@apollo/client';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
+import { useQuery } from '@apollo/client';
+
 
 // reactstrap components
 import {
@@ -32,17 +31,12 @@ import {
   Col,
 } from "reactstrap";
 
-import client from '../apolloProvider';
 import DeleteDishButton from '../components/DeleteDishButton';
 import DeleteFoodButton from '../components/DeleteFoodButton';
-import CreateNewFoodForm from '../components/CreateNewFoodForm';
+import CreateNewFood from '../components/CreateNewFood';
 import {FETCH_FOODS_QUERY, FETCH_DISHS_QUERY} from '../utils/graphql';
 
-const CreateFoodSwal = withReactContent(Swal);
-
 const Menu = () => {
-
-  console.log(client);
 
   const { loading: foodLoading, error: foodError, data: foodsData } = useQuery(FETCH_FOODS_QUERY);
 
@@ -57,17 +51,7 @@ const Menu = () => {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Foods Categories</CardTitle>
-                <Button onClick={() => {
-
-                  CreateFoodSwal.fire({
-                    title: <strong>Create a new food category</strong>,
-                    html:  <ApolloProvider client={client}>
-                    <CreateNewFoodForm />
-                    </ApolloProvider>,
-                    showConfirmButton: false
-                  })
-
-                }} color="success">Create new food category</Button>
+                <CreateNewFood />
               </CardHeader>
               <CardBody>
                 <Table className="tablesorter" responsive>
@@ -94,7 +78,7 @@ const Menu = () => {
                           }}>
                             <img src={imagePath} alt=""/>
                           </div></td>
-                          <td><DeleteFoodButton foodToDeleteId={id} /></td>
+                          <td><DeleteFoodButton foodToDeleteId={id} foodToDeleteName={category} /></td>
                         </tr>
                       ))
                     }
