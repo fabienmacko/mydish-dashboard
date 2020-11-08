@@ -187,7 +187,9 @@ class Dashboard extends React.Component {
                 <CardHeader>
                   <h5 className="card-category">Daily Sales</h5>
                   <CardTitle tag="h3">
-                    <i className="tim-icons icon-delivery-fast text-primary" />{" "}
+                    <i className="tim-icons icon-delivery-fast" style={{
+                      color: "rgba(29,140,248,1)"
+                    }} />{" "}
                     3,500€
                   </CardTitle>
                 </CardHeader>
@@ -206,7 +208,9 @@ class Dashboard extends React.Component {
                 <CardHeader>
                   <h5 className="card-category">Completed Tasks</h5>
                   <CardTitle tag="h3">
-                    <i className="tim-icons icon-send text-success" /> 12,100K
+                    <i className="tim-icons icon-send" style={{
+                      color: "rgba(29,140,248,1)"
+                    }} /> 12,100K
                   </CardTitle>
                 </CardHeader>
                 <CardBody>
