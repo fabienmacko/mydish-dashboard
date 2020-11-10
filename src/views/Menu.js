@@ -35,12 +35,12 @@ import DeleteDishButton from '../components/DeleteDishButton';
 import DeleteFoodButton from '../components/DeleteFoodButton';
 import CreateNewFood from '../components/CreateNewFood';
 import {FETCH_FOODS_QUERY, FETCH_DISHS_QUERY} from '../utils/graphql';
+import CreateNewDish from "components/CreateNewDish";
 
 const Menu = () => {
-
+  const { loading: dishLoading, error: dishError, data: dishsData } = useQuery(FETCH_DISHS_QUERY);
   const { loading: foodLoading, error: foodError, data: foodsData } = useQuery(FETCH_FOODS_QUERY);
 
-  const { loading: dishLoading, error: dishError, data: dishsData } = useQuery(FETCH_DISHS_QUERY);
 
   return (
     <>
@@ -73,7 +73,6 @@ const Menu = () => {
                             overflow: 'hidden',
                             maxWidth: "900px",
                             display: 'flex',
-                            justifyContent: "flex-end",
                             alignItems: 'center'
                           }}>
                             <img src={imagePath} alt=""/>
@@ -91,6 +90,7 @@ const Menu = () => {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Dishs</CardTitle>
+                {foodsData && foodsData.foods.length > 0 && <CreateNewDish foods={foodsData.foods} />}
               </CardHeader>
               <CardBody>
                 <Table className="tablesorter" responsive>
@@ -128,7 +128,7 @@ const Menu = () => {
                             <img src={imagePath} alt=""/>
                           </div></td>
                           <td>{preparationTime} minuts</td>
-                          <td><DeleteDishButton dishToDeleteId={id} /></td>
+                          <td><DeleteDishButton dishToDeleteId={id} dishToDeleteName={name} /></td>
                         </tr>
                       ))
                     }

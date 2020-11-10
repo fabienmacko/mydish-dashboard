@@ -16,6 +16,7 @@ import client from '../../apolloProvider';
 import {FETCH_FOODS_QUERY} from '../../utils/graphql';
 import toBase64 from '../../utils/tobase64';
 import Loader from '../Loader';
+import './createnewfood.scss';
 
 const CreateNewFood = () => {
 
@@ -25,6 +26,7 @@ const CreateNewFood = () => {
     const base64EncodedImage = await toBase64(file);
     setimageInputBase64Encoded(base64EncodedImage);
   }
+  
   const [shouldLoaderAppear, setShouldLoaderAppear] = useState(false);
   const [categoryInputValue, setCategoryInputValue] = useState('');
   const [imageInputBase64Encoded, setimageInputBase64Encoded] = useState('');
@@ -49,7 +51,10 @@ const CreateNewFood = () => {
   })
 
   const submitForm = () => {
+    
     setShouldLoaderAppear(true);
+    setCategoryInputValue('');
+    setimageInputBase64Encoded('');
     createFood();
   }
 
@@ -67,10 +72,12 @@ const CreateNewFood = () => {
               <Label for="category">Category</Label>
               <Input style={{
                 color: "black"
-              }} type="text" name="category" id="category" placeholder="Pizza, Pasta, Hamburger.." value={categoryInputValue} onChange={e => setCategoryInputValue(e.target.value)} />
+              }} type="text" name="category" id="category" placeholder="Pizza, Pasta, Hamburger.." onChange={e => setCategoryInputValue(e.target.value)} />
             </FormGroup>
             <FormGroup>
-              <Label for="image">Image</Label>
+              <Label for="image" style={{
+                color: "black"
+              }}>Image</Label>
               <Input style={{
                 color: "black"
               }} type="hidden" id="image" name="image" value={imageInputBase64Encoded} />

@@ -17,15 +17,15 @@
 */
 import Dashboard from "views/Dashboard.js";
 import Icons from "views/Icons.js";
-import TableList from "views/TableList.js";
+import Live from "views/Live.js";
 import Menu from "./containers/Menu.js";
 
 var routes = [
   {
-    path: "/dashboard",
-    name: "Dashboard",
-    icon: "tim-icons icon-chart-pie-36",
-    component: Dashboard,
+    path: "/live",
+    name: "Live Commands",
+    icon: "tim-icons icon-puzzle-10",
+    component: Live,
     layout: "/admin"
   },
   {
@@ -36,10 +36,17 @@ var routes = [
     layout: "/admin"
   },
   {
-    path: "/tables",
-    name: "Table List",
-    icon: "tim-icons icon-puzzle-10",
-    component: TableList,
+    path: "/dashboard",
+    name: "Dashboard",
+    icon: "tim-icons icon-chart-pie-36",
+    component: Dashboard,
+    layout: "/admin"
+  },
+  {
+    path: "/settings",
+    name: "Settings",
+    icon: "tim-icons icon-settings-gear-63",
+    component: Live,
     layout: "/admin"
   },
 ];

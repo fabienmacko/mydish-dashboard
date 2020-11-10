@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useMutation, gql} from '@apollo/client';
-import {FETCH_FOODS_QUERY} from '../../utils/graphql';
+import {FETCH_FOODS_QUERY, FETCH_DISHS_QUERY} from '../../utils/graphql';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
@@ -14,15 +14,24 @@ const DeleteFoodButton = ({foodToDeleteId, foodToDeleteName}) => {
 
   const [deleteFood] = useMutation(DELETE_FOOD_MUTATION, {
     update(cache) {
-      const data = cache.readQuery({
+      const dataFoods = cache.readQuery({
         query: FETCH_FOODS_QUERY
       });
 
-      console.log(data);
-      const newData = data.foods.filter(food => food.id != foodToDeleteId);
+      const dataDishs = cache.readQuery({
+        query: FETCH_DISHS_QUERY
+      });
+
+      const newDataFoods = dataFoods.foods.filter(food => food.id != foodToDeleteId);
+      const newDataDishs = dataDishs.dishs.filter(dish => dish.food.id != foodToDeleteId);
+
+      console.log(newDataDishs);
 
       cache.writeQuery({ query: FETCH_FOODS_QUERY, data: {
-        foods: [...newData]
+        foods: [...newDataFoods]
+      }});
+      cache.writeQuery({ query: FETCH_DISHS_QUERY, data: {
+        dishs: [...newDataDishs]
       }});
 
       // Remove the loader once the mutation has been done
@@ -37,8 +46,8 @@ const DeleteFoodButton = ({foodToDeleteId, foodToDeleteName}) => {
 
         // Fire swal, if the user confirm, then delete the food category and all the associated dishs
         ConfirmDeleteFoodSwal.fire({
-          title: <strong>Do you really want to delete the food category {foodToDeleteName} ?</strong>,
-          html: <p>Please note that deleting this food category will also delete all the dishs that have {foodToDeleteName} as food type.</p>,
+          title: <strong>Do you really want to delete the food category "{foodToDeleteName}" ?</strong>,
+          text: `Please note that deleting this food category will also delete all the dishs that have "${foodToDeleteName}" as food type.`,
           showConfirmButton: true,
           showCancelButton: true,
         }).then(result => {
@@ -62,7 +71,13 @@ const DeleteFoodButton = ({foodToDeleteId, foodToDeleteName}) => {
 
 const DELETE_FOOD_MUTATION = gql`
   mutation DeleteFood($foodId: String!) {
-    deleteFood(foodId: $foodId)
+    deleteFood(foodId: $foodId) {
+      id
+      category
+    }
+    deleteDishs(where: {
+      food: $foodId
+    })
   }
 `
 

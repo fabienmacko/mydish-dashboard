@@ -20,6 +20,7 @@ query {
     id
     name
     food{
+      id
       category
     }
     price

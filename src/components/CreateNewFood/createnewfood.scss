@@ -1,0 +1,17 @@
+.custom-file-label {
+  color: black !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  &:after {
+    color: white !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(39, 120, 196) !important;
+  }
+}
+
+.form-control:focus {
+  border-color: rgb(39, 120, 196) !important;
+}
