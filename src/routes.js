@@ -16,7 +16,7 @@
 
 */
 import Dashboard from "views/Dashboard.js";
-import Icons from "views/Icons.js";
+import Settings from "views/Settings.js";
 import Live from "views/Live.js";
 import Menu from "./containers/Menu.js";
 
@@ -46,7 +46,7 @@ var routes = [
     path: "/settings",
     name: "Settings",
     icon: "tim-icons icon-settings-gear-63",
-    component: Live,
+    component: Settings,
     layout: "/admin"
   },
 ];
