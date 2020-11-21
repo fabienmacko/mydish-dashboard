@@ -64,7 +64,7 @@ const DeleteFoodButton = ({foodToDeleteId, foodToDeleteName}) => {
           }
         })
       }} className="far fa-trash-alt fa-2x" style={{color: 'red',cursor: 'pointer'}}></i>
-      <Loader shouldAppear={shouldLoaderAppear} />
+      {shouldLoaderAppear && <Loader />}
     </>
   )
 }

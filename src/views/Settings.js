@@ -31,7 +31,7 @@ import {
 
 import OpenHoursRow from '../components/OpenHoursRow';
 import {FETCH_SETTINGS_QUERY} from '../utils/graphql';
-
+import Loader from '../components/Loader';
 
 const weekdays = [
   'monday',
@@ -47,6 +47,7 @@ const Settings = () => {
 
   const { loading: settingLoading, error: settingError, data: settingsData } = useQuery(FETCH_SETTINGS_QUERY);
 
+  const [shouldLoaderAppear, setShouldLoaderAppear] = useState(false);
 
   return (
     <>
@@ -78,7 +79,7 @@ const Settings = () => {
                       const eveningOpeningHour = settingsData.settings.openHours[weekday].evening.open ? settingsData.settings.openHours[weekday].evening.open : 'Closed';
                       const eveningClosingHour = settingsData.settings.openHours[weekday].evening.close ? settingsData.settings.openHours[weekday].evening.close : 'Closed';
                       return (
-                        <OpenHoursRow midday={{open: middayOpeningHour, close: middayClosingHour}} evening={{open: eveningOpeningHour, close: eveningClosingHour}} weekday={weekday} key={weekday+index} />
+                        <OpenHoursRow setShouldLoaderAppear={setShouldLoaderAppear} midday={{open: middayOpeningHour, close: middayClosingHour}} evening={{open: eveningOpeningHour, close: eveningClosingHour}} weekday={weekday} key={weekday+index} />
                       )
                     })
                   }
@@ -86,6 +87,7 @@ const Settings = () => {
               </Table>
               </CardBody>
             </Card>
+            {shouldLoaderAppear && <Loader />}
           </Col>
         </Row>
       </div>

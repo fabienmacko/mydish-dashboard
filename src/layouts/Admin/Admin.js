@@ -26,8 +26,8 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
 import routes from "routes.js";
-
-import logo from "assets/img/react-logo.png";
+import AOS from 'aos';
+import '../../assets/css/aos.css';
 
 var ps;
 
@@ -41,6 +41,8 @@ class Admin extends React.Component {
     };
   }
   componentDidMount() {
+    AOS.init();
+
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");

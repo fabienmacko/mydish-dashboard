@@ -60,7 +60,7 @@ const CreateNewFood = () => {
 
   return (
     <>
-      <Loader shouldAppear={shouldLoaderAppear} />
+      {shouldLoaderAppear && <Loader />}
       <Button onClick={() => {
 
         CreateFoodSwal.fire({

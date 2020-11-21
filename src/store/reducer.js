@@ -2,9 +2,7 @@
  * Initial State
  */
 const initialState = {
-  foods: [],
-  dishs: [],
-  commands: [],
+  
 };
 
 /**

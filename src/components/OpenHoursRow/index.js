@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+import {gql, useMutation} from '@apollo/client';
 import {
   Button,
   FormGroup,
@@ -8,64 +9,217 @@ import {
   CustomInput
 } from "reactstrap";
 
-const HourSelector = ({midday, evening}) => {
-  const hours = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"];
+import {FETCH_SETTINGS_QUERY} from '../../utils/graphql';
+
+
+const HourSelector = ({defaultValue, onChange}) => {
+  
+  const hours = ["00:00", "00:30", "01:00","01:30", "02:00","02:30", "03:00","03:30", "04:00","04:30", "05:00","05:30", "06:00","06:30", "07:00","07:30", "08:00","08:30", "09:00","09:30", "10:00","10:30", "11:00","11:30", "12:00","12:30", "13:00","13:30", "14:00","14:30", "15:00","15:30", "16:00","16:30", "17:00","17:30", "18:00","18:30", "19:00","19:30", "20:00","20:30", "21:00","21:30", "22:00","22:30", "23:00","23:30"];
 
   return (
-    <Input style={{border: 'none',width: 'auto', fontSize: '.875rem', padding: '0', margin: '0 4px'}} type="select" name="hourSelector" id="hourSelector" defaultValue={evening.open}>
+    <Input onChange={onChange} style={{border: 'none',width: 'auto', fontSize: '.875rem', padding: '0', margin: '0 4px'}} type="select" name="hourSelector" id="hourSelector" defaultValue={defaultValue.replace(":", '')}>
       {
         hours.map((hour) => (
-          <option key={'hour'+hour} value={hour}>{hour+'h'}</option>
+          <option key={'hour'+hour} value={hour.replace(":", '')}>{hour}</option>
         ))
       }
     </Input>
   )
 };
 
-const OpenHoursRow = ({midday, evening, weekday}) => {
+const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
 
+  const middayOpenHour = midday.open.toString().substr(0, 2);
+  const middayOpenMin = midday.open.toString().substr(2, 4);
+  const middayCloseHour = midday.close.toString().substr(0, 2);
+  const middayCloseMin = midday.close.toString().substr(2, 4);
+
+  const eveningOpenHour = evening.open.toString().substr(0, 2);
+  const eveningOpenMin = evening.open.toString().substr(2, 4);
+  const eveningCloseHour = evening.close.toString().substr(0, 2);
+  const eveningCloseMin = evening.close.toString().substr(2, 4);
+
+  const stringFormattedMidday = `${middayOpenHour}:${middayOpenMin} - ${middayCloseHour}:${middayCloseMin}`;
+  const stringFormattedEvening = `${eveningOpenHour}:${eveningOpenMin} - ${eveningCloseHour}:${eveningCloseMin}`;
 
   const [updatableRow, setUpdatableRow] = useState(false);
 
   // Midday
-  const [middayOpenHour, setMiddayOpenHour] = useState(midday.open);
-  const [middayCloseHour, setMiddayCloseHour] = useState(midday.close);
+  const [middayOpenHourState, setmiddayOpenHourState] = useState(midday.open);
+  const [middayCloseHourState, setMiddayCloseHourState] = useState(midday.close);
 
   // Evening
-  const [eveningOpenHour, setEveningOpenHour] = useState(evening.open);
-  const [eveningCloseHour, setEveningCloseHour] = useState(evening.close);  
+  const [eveningOpenHourState, setEveningOpenHourState] = useState(evening.open);
+  const [eveningCloseHourState, setEveningCloseHourState] = useState(evening.close);  
+
+
+  const [updateSetting] = useMutation(UPDATE_SETTING_MUTATIONS, {
+    variables: {
+      weekday: weekday,
+      openTimes: {
+        midday: {
+          open: middayOpenHourState,
+          close: middayCloseHourState
+        },
+        evening: {
+          open: eveningOpenHourState,
+          close: eveningCloseHourState
+        },
+      }
+    },
+    update(cache,result) {
+      const data = cache.readQuery({
+        query: FETCH_SETTINGS_QUERY
+      });
+      console.log(result);
+
+      cache.writeQuery({query: FETCH_SETTINGS_QUERY, data: {
+        settings: result.data.updateOpenHour
+      }});
+    },
+    onCompleted() {
+      setShouldLoaderAppear(false);
+    }
+  })
+
+
+  // Event handlers
+
+  const saveOpeningHoursModifications = (e) => {
+    setShouldLoaderAppear(true);
+    setUpdatableRow(false);
+
+    updateSetting();
+  }
 
   return (
-    <tr>
-      <td>{weekday[0].toUpperCase() + weekday.slice(1) /* Uppercase the first letter */}</td>
-      {
-        updatableRow ? (
-          <>
-            <td>
-              <div style={{display: 'flex', alignItems:'center', justifyContent: 'flex-start'}}>
-                <HourSelector midday={midday} evening={evening} /> - <HourSelector midday={midday} evening={evening} />
-              </div>
-            </td>
+    <>
+      <tr>
+        <td>{weekday[0].toUpperCase() + weekday.slice(1) /* Uppercase the first letter */}</td>
+        {
+          updatableRow ? (
+            <>
+              <td>
+                <div style={{display: 'flex', alignItems:'center', justifyContent: 'flex-start'}}>
+                  <HourSelector defaultValue={`${middayOpenHour}:${middayOpenMin}`} onChange={e => setmiddayOpenHourState(+e.target.value)} /> - <HourSelector defaultValue={`${middayCloseHour}:${middayCloseMin}`} onChange={e => setMiddayCloseHourState(+e.target.value)} />
+                </div>
+              </td>
 
-            <td>
-              <div style={{display: 'flex', alignItems:'center', justifyContent: 'flex-start'}}>
-                <HourSelector midday={midday} evening={evening} /> - <HourSelector midday={midday} evening={evening} />
-              </div>
-            </td>
-          </>
-        ) : (
-          <>
-            <td>{midday.open}h - {midday.close}h</td>
-            <td>{evening.open}h - {evening.close}h</td>
-          </>
-        )
-      }
-      <td><i style={{
-        color: 'yellow',
-        cursor: 'pointer'
-    }} className="fas fa-edit" onClick={() => setUpdatableRow(true)}></i></td>
-    </tr>
+              <td>
+                <div style={{display: 'flex', alignItems:'center', justifyContent: 'flex-start'}}>
+                  <HourSelector defaultValue={`${eveningOpenHour}:${eveningOpenMin}`} onChange={e => setEveningOpenHourState(+e.target.value)} /> - <HourSelector defaultValue={`${eveningCloseHour}:${eveningCloseMin}`} onChange={e => setEveningCloseHourState(+e.target.value)} />
+                </div>
+              </td>
+            </>
+          ) : (
+            <>
+              <td>{stringFormattedMidday}</td>
+              <td>{stringFormattedEvening}</td>
+            </>
+          )
+        }
+
+        <td>
+          {
+            updatableRow ? (
+              <i style={{
+                color: 'green',
+                cursor: 'pointer'
+            }} className="far fa-check-square fa-2x" onClick={saveOpeningHoursModifications}></i>
+            ) : (
+              <i style={{
+                color: 'yellow',
+                cursor: 'pointer'
+            }} className="fas fa-edit fa-2x" onClick={() => setUpdatableRow(true)}></i>
+            )
+          }
+        </td>
+
+      </tr>
+    </>
   )
 }
+
+const UPDATE_SETTING_MUTATIONS = gql`
+mutation updateSetting($weekday: String!, $openTimes: OpenTimesInput!) {
+  updateOpenHour(
+    weekday: $weekday
+    openTimes: $openTimes
+  ) {
+    openHours {
+      monday {
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+      tuesday{
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+      wednesday{
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+      thursday{
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+      friday{
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+      saturday{
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+      sunday{
+        midday {
+          open
+          close
+        }
+        evening {
+          open
+          close
+        }
+      }
+    }
+  }
+}
+`
 
 export default OpenHoursRow;

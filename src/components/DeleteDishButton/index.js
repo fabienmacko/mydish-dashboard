@@ -42,7 +42,7 @@ const DeleteDishButton = ({dishToDeleteId, dishToDeleteName}) => {
           }
         })
       }} className="far fa-trash-alt fa-2x" style={{color: 'red',cursor: 'pointer'}}></i>
-      <Loader shouldAppear={shouldLoaderAppear} />
+      {shouldLoaderAppear && <Loader />}
     </>
   )
 }
