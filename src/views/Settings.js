@@ -70,14 +70,15 @@ const Settings = () => {
                 <tbody>
                   {
                     settingsData && weekdays.map((weekday, index) => {
-
+                      
                       // Mid day
-                      const middayOpeningHour = settingsData.settings.openHours[weekday].midday.open ? settingsData.settings.openHours[weekday].midday.open : 'Closed';
-                      const middayClosingHour = settingsData.settings.openHours[weekday].midday.close ? settingsData.settings.openHours[weekday].midday.close : 'Closed';
+                      const middayOpeningHour = settingsData.settings.openHours[weekday].midday.open > 0 ? settingsData.settings.openHours[weekday].midday.open : 'Closed';
+                      const middayClosingHour = settingsData.settings.openHours[weekday].midday.close > 0 ? settingsData.settings.openHours[weekday].midday.close : 'Closed';
 
                       // Evening
-                      const eveningOpeningHour = settingsData.settings.openHours[weekday].evening.open ? settingsData.settings.openHours[weekday].evening.open : 'Closed';
-                      const eveningClosingHour = settingsData.settings.openHours[weekday].evening.close ? settingsData.settings.openHours[weekday].evening.close : 'Closed';
+                      const eveningOpeningHour = settingsData.settings.openHours[weekday].evening.open > 0 ? settingsData.settings.openHours[weekday].evening.open : 'Closed';
+                      const eveningClosingHour = settingsData.settings.openHours[weekday].evening.close > 0 ? settingsData.settings.openHours[weekday].evening.close : 'Closed';
+
                       return (
                         <OpenHoursRow setShouldLoaderAppear={setShouldLoaderAppear} midday={{open: middayOpeningHour, close: middayClosingHour}} evening={{open: eveningOpeningHour, close: eveningClosingHour}} weekday={weekday} key={weekday+index} />
                       )

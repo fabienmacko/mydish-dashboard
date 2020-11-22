@@ -11,7 +11,7 @@ import {
 
 import {FETCH_SETTINGS_QUERY} from '../../utils/graphql';
 
-
+// Used components
 const HourSelector = ({defaultValue, onChange}) => {
   
   const hours = ["00:00", "00:30", "01:00","01:30", "02:00","02:30", "03:00","03:30", "04:00","04:30", "05:00","05:30", "06:00","06:30", "07:00","07:30", "08:00","08:30", "09:00","09:30", "10:00","10:30", "11:00","11:30", "12:00","12:30", "13:00","13:30", "14:00","14:30", "15:00","15:30", "16:00","16:30", "17:00","17:30", "18:00","18:30", "19:00","19:30", "20:00","20:30", "21:00","21:30", "22:00","22:30", "23:00","23:30"];
@@ -27,31 +27,45 @@ const HourSelector = ({defaultValue, onChange}) => {
   )
 };
 
+const OpenCloseButton = ({type, onClick}) => {
+return (
+      <div onClick={onClick} style={{
+        color: 'white',
+        cursor: 'pointer',
+        backgroundColor: type == 'Open' ? 'green' : 'red',
+        padding: '7px',
+        fontWeight: 'bold'
+    }}>{type}</div>
+  )
+}
+
 const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
+  console.log(midday);
+  const middayOpenHour = midday.open.substr(0, 2);
+  const middayOpenMin = midday.open.substr(2, 4);
+  const middayCloseHour = midday.close.substr(0, 2);
+  const middayCloseMin = midday.close.substr(2, 4);
 
-  const middayOpenHour = midday.open.toString().substr(0, 2);
-  const middayOpenMin = midday.open.toString().substr(2, 4);
-  const middayCloseHour = midday.close.toString().substr(0, 2);
-  const middayCloseMin = midday.close.toString().substr(2, 4);
+  const eveningOpenHour = evening.open.substr(0, 2);
+  const eveningOpenMin = evening.open.substr(2, 4);
+  const eveningCloseHour = evening.close.substr(0, 2);
+  const eveningCloseMin = evening.close.substr(2, 4);
 
-  const eveningOpenHour = evening.open.toString().substr(0, 2);
-  const eveningOpenMin = evening.open.toString().substr(2, 4);
-  const eveningCloseHour = evening.close.toString().substr(0, 2);
-  const eveningCloseMin = evening.close.toString().substr(2, 4);
-
-  const stringFormattedMidday = `${middayOpenHour}:${middayOpenMin} - ${middayCloseHour}:${middayCloseMin}`;
-  const stringFormattedEvening = `${eveningOpenHour}:${eveningOpenMin} - ${eveningCloseHour}:${eveningCloseMin}`;
+  const stringFormattedMidday = midday.close == "Closed" ? "Closed" : `${middayOpenHour}:${middayOpenMin} - ${middayCloseHour}:${middayCloseMin}`;
+  const stringFormattedEvening = evening.close == "Closed" ? "Closed" : `${eveningOpenHour}:${eveningOpenMin} - ${eveningCloseHour}:${eveningCloseMin}`;
 
   const [updatableRow, setUpdatableRow] = useState(false);
 
   // Midday
-  const [middayOpenHourState, setmiddayOpenHourState] = useState(midday.open);
+  const [middayOpenHourState, setMiddayOpenHourState] = useState(midday.open);
   const [middayCloseHourState, setMiddayCloseHourState] = useState(midday.close);
+  const [isMiddayClosedState, setIsMiddayClosedState] = useState(midday.close == "Closed");
 
   // Evening
   const [eveningOpenHourState, setEveningOpenHourState] = useState(evening.open);
   const [eveningCloseHourState, setEveningCloseHourState] = useState(evening.close);  
-
+  const [isEveningClosedState, setIsEveningClosedState] = useState(evening.close == "Closed");
+  console.log(eveningCloseHourState);
 
   const [updateSetting] = useMutation(UPDATE_SETTING_MUTATIONS, {
     variables: {
@@ -68,10 +82,6 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
       }
     },
     update(cache,result) {
-      const data = cache.readQuery({
-        query: FETCH_SETTINGS_QUERY
-      });
-      console.log(result);
 
       cache.writeQuery({query: FETCH_SETTINGS_QUERY, data: {
         settings: result.data.updateOpenHour
@@ -86,10 +96,38 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
   // Event handlers
 
   const saveOpeningHoursModifications = (e) => {
+
     setShouldLoaderAppear(true);
     setUpdatableRow(false);
 
     updateSetting();
+  }
+
+  const closedOpenHours = (e, dayPeriod) => {
+
+    if (dayPeriod == "Midday") {
+      setMiddayOpenHourState("Closed");
+      setMiddayCloseHourState("Closed");
+      setIsMiddayClosedState(true);
+    } else if (dayPeriod == "Evening") {
+      setEveningOpenHourState("Closed");
+      setEveningCloseHourState("Closed");
+      setIsEveningClosedState(true);
+    }
+  }
+
+  const openOpenHours = (e, dayPeriod) => {
+
+    if (dayPeriod == "Midday") {
+      setMiddayOpenHourState("0000");
+      setMiddayCloseHourState("0000");
+      setIsMiddayClosedState(false);
+    } else if (dayPeriod == "Evening") {
+      setEveningOpenHourState("0000");
+      setEveningCloseHourState("0000");
+      setIsEveningClosedState(false);
+    }
+
   }
 
   return (
@@ -101,13 +139,41 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
             <>
               <td>
                 <div style={{display: 'flex', alignItems:'center', justifyContent: 'flex-start'}}>
-                  <HourSelector defaultValue={`${middayOpenHour}:${middayOpenMin}`} onChange={e => setmiddayOpenHourState(+e.target.value)} /> - <HourSelector defaultValue={`${middayCloseHour}:${middayCloseMin}`} onChange={e => setMiddayCloseHourState(+e.target.value)} />
+                  {
+                    isMiddayClosedState ? (
+                      <>
+                        <div style={{marginRight: '5px'}}>Closed</div>
+                      
+                        <OpenCloseButton type="Open" onClick={e => openOpenHours(e,'Midday')} />
+                      </>
+                      ) : (
+                        <>
+                          <HourSelector defaultValue={`${middayOpenHour}:${middayOpenMin}`} onChange={e => setMiddayOpenHourState(e.target.value)} /> - <HourSelector defaultValue={`${middayCloseHour}:${middayCloseMin}`} onChange={e => setMiddayCloseHourState(e.target.value)} />
+                          
+                          <OpenCloseButton type="Closed" onClick={e => closedOpenHours(e,'Midday')} />
+                        </>
+                      )
+                  }
                 </div>
               </td>
 
               <td>
                 <div style={{display: 'flex', alignItems:'center', justifyContent: 'flex-start'}}>
-                  <HourSelector defaultValue={`${eveningOpenHour}:${eveningOpenMin}`} onChange={e => setEveningOpenHourState(+e.target.value)} /> - <HourSelector defaultValue={`${eveningCloseHour}:${eveningCloseMin}`} onChange={e => setEveningCloseHourState(+e.target.value)} />
+                  {
+                    isEveningClosedState ? (
+                      <>
+                        <div style={{marginRight: '5px'}}>Closed</div>
+                      
+                        <OpenCloseButton type="Open" onClick={e => openOpenHours(e,'Evening')} />
+                      </>
+                      ) : (
+                        <>
+                          <HourSelector defaultValue={`${eveningOpenHour}:${eveningOpenMin}`} onChange={e => setEveningOpenHourState(e.target.value)} /> - <HourSelector defaultValue={`${eveningCloseHour}:${eveningCloseMin}`} onChange={e => setEveningCloseHourState(e.target.value)} />
+                          
+                          <OpenCloseButton type="Closed" onClick={e => closedOpenHours(e,'Evening')} />
+                        </>
+                      )
+                  }
                 </div>
               </td>
             </>
