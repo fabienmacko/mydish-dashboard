@@ -40,7 +40,6 @@ return (
 }
 
 const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
-  console.log(midday);
   const middayOpenHour = midday.open.substr(0, 2);
   const middayOpenMin = midday.open.substr(2, 4);
   const middayCloseHour = midday.close.substr(0, 2);
@@ -50,6 +49,8 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
   const eveningOpenMin = evening.open.substr(2, 4);
   const eveningCloseHour = evening.close.substr(0, 2);
   const eveningCloseMin = evening.close.substr(2, 4);
+
+  console.log(midday.close);
 
   const stringFormattedMidday = midday.close == "Closed" ? "Closed" : `${middayOpenHour}:${middayOpenMin} - ${middayCloseHour}:${middayCloseMin}`;
   const stringFormattedEvening = evening.close == "Closed" ? "Closed" : `${eveningOpenHour}:${eveningOpenMin} - ${eveningCloseHour}:${eveningCloseMin}`;
@@ -103,7 +104,7 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
     updateSetting();
   }
 
-  const closedOpenHours = (e, dayPeriod) => {
+  const closeOpenHours = (e, dayPeriod) => {
 
     if (dayPeriod == "Midday") {
       setMiddayOpenHourState("Closed");
@@ -150,7 +151,7 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
                         <>
                           <HourSelector defaultValue={`${middayOpenHour}:${middayOpenMin}`} onChange={e => setMiddayOpenHourState(e.target.value)} /> - <HourSelector defaultValue={`${middayCloseHour}:${middayCloseMin}`} onChange={e => setMiddayCloseHourState(e.target.value)} />
                           
-                          <OpenCloseButton type="Closed" onClick={e => closedOpenHours(e,'Midday')} />
+                          <OpenCloseButton type="Closed" onClick={e => closeOpenHours(e,'Midday')} />
                         </>
                       )
                   }
@@ -170,7 +171,7 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
                         <>
                           <HourSelector defaultValue={`${eveningOpenHour}:${eveningOpenMin}`} onChange={e => setEveningOpenHourState(e.target.value)} /> - <HourSelector defaultValue={`${eveningCloseHour}:${eveningCloseMin}`} onChange={e => setEveningCloseHourState(e.target.value)} />
                           
-                          <OpenCloseButton type="Closed" onClick={e => closedOpenHours(e,'Evening')} />
+                          <OpenCloseButton type="Closed" onClick={e => closeOpenHours(e,'Evening')} />
                         </>
                       )
                   }
