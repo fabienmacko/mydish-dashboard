@@ -9,6 +9,7 @@ const DeleteDishButton = ({dishToDeleteId}) => {
   const [shouldLoaderAppear, setShouldLoaderAppear] = useState(false);
 
   const [deleteDish] = useMutation(DELETE_DISH_MUTATION, {
+    
     update(cache) {
 
       const data = cache.readQuery({

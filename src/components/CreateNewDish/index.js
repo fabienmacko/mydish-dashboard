@@ -47,13 +47,22 @@ const CreateNewDish = ({foods}) => {
       imagePath: imageInputBase64Encoded
     },
     update(cache,result) {
-      const data = cache.readQuery({
-        query: FETCH_DISHS_QUERY
-      });
+      console.log(cache.data.data.ROOT_QUERY);
+      if(!cache.data.data.ROOT_QUERY){
+        throw console.error('No root query');
+      } else { 
+        const data = cache.readQuery({
+          query: FETCH_DISHS_QUERY
+        });
 
-      cache.writeQuery({query: FETCH_DISHS_QUERY, data: {
-        dishs: [...data.dishs, result.data.createDish]
-      }});
+        console.log(data.dishs);
+
+        const newDishsData = data.dishs ? [...data.dishs, result.data.createDish] : [result.data.createDish];
+
+        cache.writeQuery({query: FETCH_DISHS_QUERY, data: {
+          dishs: newDishsData
+        }});
+      }
 
       setShouldLoaderAppear(false);
     }
@@ -62,6 +71,16 @@ const CreateNewDish = ({foods}) => {
   const submitForm = () => {
     setShouldLoaderAppear(true);
     createDish();
+    resetForm();
+  }
+
+  const resetForm = () => {
+     setNameInputValue('');
+     setFoodInputValue(foods[0].id);
+     setPriceInputValue(0);
+     setIngredientsInputValue('');
+     setPreparationTimeInputValue(0);
+     setimageInputBase64Encoded('');
   }
 
   return (

@@ -3,6 +3,7 @@ import {gql} from '@apollo/client';
 export const FETCH_SETTINGS_QUERY = gql`
 query {
   settings{
+    id
     openHours {
       monday {
         midday{

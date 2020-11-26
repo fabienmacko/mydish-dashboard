@@ -90,12 +90,6 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
         },
       }
     },
-    update(cache,result) {
-
-      cache.writeQuery({query: FETCH_SETTINGS_QUERY, data: {
-        settings: result.data.updateOpenHour
-      }});
-    },
     onCompleted() {
       setShouldLoaderAppear(false);
     }
@@ -236,6 +230,7 @@ mutation updateSetting($weekday: String!, $openTimes: OpenTimesInput!) {
     weekday: $weekday
     openTimes: $openTimes
   ) {
+    id
     openHours {
       monday {
         midday {

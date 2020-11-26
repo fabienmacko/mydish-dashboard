@@ -51,11 +51,14 @@ const CreateNewFood = () => {
   })
 
   const submitForm = () => {
-    
     setShouldLoaderAppear(true);
+    createFood();
+    resetFields();
+  }
+
+  const resetFields = () => {
     setCategoryInputValue('');
     setimageInputBase64Encoded('');
-    createFood();
   }
 
   return (
