@@ -21,7 +21,6 @@ import { useQuery } from '@apollo/client';
 
 // reactstrap components
 import {
-  Button,
   Card,
   CardHeader,
   CardBody,
@@ -40,7 +39,15 @@ import CreateNewDish from "components/CreateNewDish";
 const Menu = () => {
   const { loading: dishLoading, error: dishError, data: dishsData } = useQuery(FETCH_DISHS_QUERY);
   const { loading: foodLoading, error: foodError, data: foodsData } = useQuery(FETCH_FOODS_QUERY);
+  
+  if (dishLoading || foodLoading) {
+    console.log("Loading..");
+  }
 
+    
+  if (dishError || foodError) {
+    console.log("Error: "+dishError ? dishError : foodError);
+  }
 
   return (
     <>

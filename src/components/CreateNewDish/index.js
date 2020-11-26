@@ -35,7 +35,7 @@ const CreateNewDish = ({foods}) => {
   const [ingredientsInputValue, setIngredientsInputValue] = useState('');
   const [preparationTimeInputValue, setPreparationTimeInputValue] = useState(0);
   const [imageInputBase64Encoded, setimageInputBase64Encoded] = useState('');
-  console.log(foodInputValue);
+  
 
   const [createDish] = useMutation(CREATE_DISH_MUTATION, {
     variables: {
@@ -84,7 +84,7 @@ const CreateNewDish = ({foods}) => {
               <Label for="food">Food type</Label>
               <Input style={{color:'black'}} type="select" name="food" id="food" onChange={e => setFoodInputValue(e.target.value)}>
                 {
-                  foods && foods.map((food, index) => index == 0 ? <option defaultValue key={food.id} value={food.id}>{food.category}</option> : <option key={food.id} value={food.id}>{food.category}</option>)
+                  foods && foods.map((food, index) => index === 0 ? <option defaultValue key={food.id} value={food.id}>{food.category}</option> : <option key={food.id} value={food.id}>{food.category}</option>)
                 }
               </Input>
             </FormGroup>

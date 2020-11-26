@@ -46,6 +46,13 @@ const weekdays = [
 const Settings = () => {
 
   const { loading: settingLoading, error: settingError, data: settingsData } = useQuery(FETCH_SETTINGS_QUERY);
+  if (settingLoading) {
+    console.log("Loading..");
+  }
+
+  if (settingError) {
+    console.log("Error: "+settingError);
+  }
 
   const [shouldLoaderAppear, setShouldLoaderAppear] = useState(false);
 
@@ -72,12 +79,12 @@ const Settings = () => {
                     settingsData && weekdays.map((weekday, index) => {
                       
                       // Mid day
-                      const middayOpeningHour = settingsData.settings.openHours[weekday].midday.open == 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].midday.open;
-                      const middayClosingHour = settingsData.settings.openHours[weekday].midday.close == 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].midday.close;
+                      const middayOpeningHour = settingsData.settings.openHours[weekday].midday.open === 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].midday.open;
+                      const middayClosingHour = settingsData.settings.openHours[weekday].midday.close === 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].midday.close;
 
                       // Evening
-                      const eveningOpeningHour = settingsData.settings.openHours[weekday].evening.open == 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].evening.open;
-                      const eveningClosingHour = settingsData.settings.openHours[weekday].evening.close == 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].evening.close;
+                      const eveningOpeningHour = settingsData.settings.openHours[weekday].evening.open === 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].evening.open;
+                      const eveningClosingHour = settingsData.settings.openHours[weekday].evening.close === 'Closed' ? 'Closed' : settingsData.settings.openHours[weekday].evening.close;
 
                       return (
                         <OpenHoursRow setShouldLoaderAppear={setShouldLoaderAppear} midday={{open: middayOpeningHour, close: middayClosingHour}} evening={{open: eveningOpeningHour, close: eveningClosingHour}} weekday={weekday} key={weekday+index} />

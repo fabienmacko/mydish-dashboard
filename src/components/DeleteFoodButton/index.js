@@ -22,10 +22,8 @@ const DeleteFoodButton = ({foodToDeleteId, foodToDeleteName}) => {
         query: FETCH_DISHS_QUERY
       });
 
-      const newDataFoods = dataFoods.foods.filter(food => food.id != foodToDeleteId);
-      const newDataDishs = dataDishs.dishs.filter(dish => dish.food.id != foodToDeleteId);
-
-      console.log(newDataDishs);
+      const newDataFoods = dataFoods.foods.filter(food => food.id !== foodToDeleteId);
+      const newDataDishs = dataDishs.dishs.filter(dish => dish.food.id !== foodToDeleteId);
 
       cache.writeQuery({ query: FETCH_FOODS_QUERY, data: {
         foods: [...newDataFoods]

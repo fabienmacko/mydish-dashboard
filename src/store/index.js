@@ -13,8 +13,8 @@ import reducer from './reducer';
  * Code
  */
 const devTools = [];
-if (window.devToolsExtension) {
-  devTools.push(window.devToolsExtension());
+if (window.__REDUX_DEVTOOLS_EXTENSION__) {
+  devTools.push(window.__REDUX_DEVTOOLS_EXTENSION__());
 }
 
 

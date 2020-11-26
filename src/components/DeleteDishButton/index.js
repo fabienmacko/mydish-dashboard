@@ -1,16 +1,12 @@
 import React, {useState} from 'react';
 import {useMutation, gql} from '@apollo/client';
 import {FETCH_DISHS_QUERY} from '../../utils/graphql';
-import Swal from 'sweetalert2';
-import withReactContent from 'sweetalert2-react-content';
 
 import Loader from '../Loader';
 
-const DeleteDishButton = ({dishToDeleteId, dishToDeleteName}) => {
+const DeleteDishButton = ({dishToDeleteId}) => {
 
   const [shouldLoaderAppear, setShouldLoaderAppear] = useState(false);
-
-  const ConfirmDeleteDishSwal = withReactContent(Swal);
 
   const [deleteDish] = useMutation(DELETE_DISH_MUTATION, {
     update(cache) {
@@ -19,7 +15,7 @@ const DeleteDishButton = ({dishToDeleteId, dishToDeleteName}) => {
         query: FETCH_DISHS_QUERY
       });
       
-      const newData = data.dishs.filter(dish => dish.id != dishToDeleteId);
+      const newData = data.dishs.filter(dish => dish.id !== dishToDeleteId);
 
       cache.writeQuery({ query: FETCH_DISHS_QUERY, data: {
         dishs: [...newData]
