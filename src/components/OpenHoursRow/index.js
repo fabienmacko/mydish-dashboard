@@ -97,7 +97,13 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
 
 
   // Logic
-  const isOpenHoursValid = () => middayOpenHourState < middayCloseHourState && eveningOpenHourState < eveningCloseHourState;
+  const isOpenHoursValid = () => {
+    
+    // Midday check
+    if (middayOpenHourState == "Closed") {
+      
+    }
+  }
 
 
   // Event handlers

@@ -24,14 +24,14 @@ var routes = [
   {
     path: "/live",
     name: "Live Commands",
-    icon: "tim-icons icon-puzzle-10",
+    icon: "tim-icons icon-delivery-fast",
     component: Live,
     layout: "/admin"
   },
   {
     path: "/menu",
     name: "Menu",
-    icon: "tim-icons icon-align-center",
+    icon: "tim-icons icon-bullet-list-67",
     component: Menu,
     layout: "/admin"
   },
