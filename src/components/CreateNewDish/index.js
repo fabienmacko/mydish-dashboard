@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 import { ApolloProvider } from '@apollo/client';
 import client from '../../apolloProvider';
+import axios from 'axios';
 
 import {FETCH_DISHS_QUERY} from '../../utils/graphql';
 import toBase64 from '../../utils/tobase64';
@@ -37,7 +38,10 @@ const CreateNewDish = ({foods}) => {
   const [ingredientsInputValue, setIngredientsInputValue] = useState('');
   const [preparationTimeInputValue, setPreparationTimeInputValue] = useState();
   const [imageInputBase64Encoded, setImageInputBase64Encoded] = useState();
-  
+  const [imageFile, setImageFile] = useState({});
+  console.log(nameInputValue);
+
+  const serverBaseUrl = process.env.REACT_APP_SERVER_URL;
 
   const [createDish] = useMutation(CREATE_DISH_MUTATION, {
     variables: {
@@ -46,7 +50,7 @@ const CreateNewDish = ({foods}) => {
       price: parseInt(priceInputValue + centsInputValue),
       ingredients: ingredientsInputValue.split(',').map(ingredient => ingredient.trim()),
       preparationTime: +preparationTimeInputValue,
-      imagePath: imageInputBase64Encoded
+      imagePath: serverBaseUrl+'/images/'+imageFile.name
     },
     update(cache,result) {
       console.log(cache.data.data.ROOT_QUERY);
@@ -70,10 +74,24 @@ const CreateNewDish = ({foods}) => {
     }
   })
 
+  const fileUpload = () => {
+    const url = serverBaseUrl+'/image';
+    const formData = new FormData();
+    console.log('ImageFile', imageFile);
+    formData.append('file', imageFile);
+    formData.append('name', imageFile.name);
+    formData.append('desc','Test description');
+
+    return axios.post(url, formData);
+  }
+
   const submitForm = () => {
+    fileUpload().then((response)=>{
+      console.log(response.data);
+    })
     setShouldLoaderAppear(true);
     createDish();
-    // resetForm();
+    resetForm();
   }
 
   const isFormValid = () => {
@@ -96,6 +114,10 @@ const CreateNewDish = ({foods}) => {
      setIngredientsInputValue('');
      setPreparationTimeInputValue(0);
      setImageInputBase64Encoded('');
+  }
+
+  const handleImageFileChange = (e) => {
+    setImageFile(e.target.files[0]);
   }
 
   const handlePriceChange = (e) => {
@@ -179,7 +201,7 @@ const CreateNewDish = ({foods}) => {
             <FormGroup>
               <Label for="image">Image</Label>
               <Input type="hidden" id="image" name="image" />
-              <CustomInput type="file" id="imageFile" name="imageFile" label="Pick an image" className="form-control" onChange={e => convertImageToBase64(e.target.files[0])}  />
+              <CustomInput type="file" id="imageFile" name="imageFile" label="Pick an image" className="form-control" onChange={handleImageFileChange}  />
             </FormGroup>
 
           </Form>
@@ -187,7 +209,7 @@ const CreateNewDish = ({foods}) => {
           showConfirmButton: true,
           confirmButtonText: 'Submit'
         }).then(result => {
-          if (result.isConfirmed && isFormValid()) {
+          if (result.isConfirmed /* isFormValid() */) {
             console.log('form submited');
             submitForm();
           }
