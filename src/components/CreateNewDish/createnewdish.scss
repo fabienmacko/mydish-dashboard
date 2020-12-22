@@ -1,0 +1,62 @@
+.custom-file-label {
+  color: black !important;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  &:after {
+    color: white !important;
+    display: flex !important;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(39, 120, 196) !important;
+  }
+}
+
+.numberInput {
+  border: none;
+  background-color: rgba(0, 0, 0, 0.048);
+  padding: 5px;
+  border-radius: 5px;
+  width: 35px;
+  font-size: 18px;
+  text-align: center;
+}
+
+form {
+  input, select, option {
+    color: black !important;
+    font-size: 17px !important;
+  }
+}
+
+.form-control, .input-container {
+  border-radius: 4px !important;
+}
+
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  padding: 10px !important;
+  border: 1px solid rgb(43, 53, 83);
+  font-size: 0.75rem;
+  transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
+
+  .price-comma {
+    font-weight: bold;
+    font-size: 20px;
+    margin: 0 5px;
+  }
+  .currency {
+    align-self: center;
+    margin-left: 5px;
+  }
+}
+
+.form-control:focus {
+  border-color: rgb(39, 120, 196) !important;
+}
+
+.swal2-content {
+  text-align: left;
+}

@@ -5,8 +5,6 @@ import {
 } from "reactstrap";
 import Swal from 'sweetalert2';
 
-import {FETCH_SETTINGS_QUERY} from '../../utils/graphql';
-
 const Toast = Swal.mixin({
   toast: true,
   position: 'top-end',
@@ -100,7 +98,7 @@ const OpenHoursRow = ({midday, evening, weekday, setShouldLoaderAppear}) => {
   const isOpenHoursValid = () => {
     
     // Midday check
-    if (middayOpenHourState == "Closed") {
+    if (middayOpenHourState === "Closed") {
       
     }
   }

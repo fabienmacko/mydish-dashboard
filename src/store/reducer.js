@@ -2,7 +2,7 @@
  * Initial State
  */
 const initialState = {
-  
+  userLanguage: navigator.language,
 };
 
 /**

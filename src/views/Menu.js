@@ -76,13 +76,13 @@ const Menu = () => {
                           <td><div style={{
                             position: "relative",
                             borderRadius: "5px",
-                            height: "200px",
+                            maxHeight: "200px",
                             overflow: 'hidden',
-                            maxWidth: "900px",
+                            width: "100%",
                             display: 'flex',
                             alignItems: 'center'
                           }}>
-                            <img src={imagePath} alt=""/>
+                            <img style={{width: '100%'}} src={imagePath} alt={`Category ${category}`}/>
                           </div></td>
                           <td><DeleteFoodButton foodToDeleteId={id} foodToDeleteName={category} /></td>
                         </tr>
@@ -126,13 +126,13 @@ const Menu = () => {
                           <td><div style={{
                             position: "relative",
                             borderRadius: "5px",
-                            height: "200px",
+                            maxHeight: "200px",
                             overflow: 'hidden',
-                            maxWidth: "900px",
+                            width: "100%",
                             display: 'flex',
                             alignItems: 'center'
                           }}>
-                            <img src={imagePath} alt=""/>
+                            <img style={{width: '100%'}} src={imagePath} alt={`Dish ${name}`} />
                           </div></td>
                           <td>{preparationTime} minuts</td>
                           <td><DeleteDishButton dishToDeleteId={id} dishToDeleteName={name} /></td>
